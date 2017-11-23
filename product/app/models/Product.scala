@@ -13,4 +13,7 @@ object Product{ // the Data Access Object : DAO
 
   def findAll = products.toList.sortBy(_.ean) // Finder function
   def findByEan(ean: Long) = products.find(_.ean==ean)
+  def add(product: Product): Unit = {
+    products = products + product
+  }
 }

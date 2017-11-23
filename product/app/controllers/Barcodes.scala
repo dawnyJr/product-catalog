@@ -9,8 +9,9 @@ import play.api.mvc.{AbstractController, ControllerComponents}
 class Barcodes @Inject()(val cc: ControllerComponents) extends AbstractController(cc) with I18nSupport{
 
   val ImageResolution = 144
+
   def barcode(ean: Long) = Action {
-    import java.lang.IllegalArgumentException
+
     val MimeType = "image/png"
     try{
       val imageData = ean13BarCode(ean,MimeType)
