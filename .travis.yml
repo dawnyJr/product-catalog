@@ -5,4 +5,4 @@ env:
   matrix:
     - SCRIPT=test-scala
 script:
-  - framework/bin/$SCRIPT
+  - product/$SCRIPT
