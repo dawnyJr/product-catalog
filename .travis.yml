@@ -1,1 +1,8 @@
-language : scala
+language: scala
+jdk:
+  - oraclejdk8
+env:
+  matrix:
+    - SCRIPT=test-scala
+script:
+  - framework/bin/$SCRIPT
