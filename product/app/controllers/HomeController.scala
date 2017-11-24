@@ -1,6 +1,10 @@
 package controllers
 
-import play.api.mvc.{Action, Controller}
+import javax.inject.{Inject, Singleton}
+
+import models.Product
+import play.api.i18n.I18nSupport
+import play.api.mvc._
 
 
 /**
@@ -8,7 +12,9 @@ import play.api.mvc.{Action, Controller}
  * application's home page.
  */
 
-class HomeController extends Controller{
+
+@Singleton
+class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) with I18nSupport{
 
   /**
    * Create an Action to render an HTML page.
@@ -18,6 +24,7 @@ class HomeController extends Controller{
    * a path of `/`.
    */
   def index = Action { implicit request =>
-    Redirect(routes.Products.list())
+    val products = Product.findAll
+    Ok(views.html.products.list(products))
   }
 }

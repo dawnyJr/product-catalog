@@ -5,14 +5,12 @@ import javax.inject._
 
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc._
-import play.mvc.Controller
-import play.mvc.Http.Context.Implicit
 
 //import for managing Forms
 import play.api.data._
 import play.api.data.Forms._
 
-
+@Singleton
 class Products @Inject()(val cc: ControllerComponents) extends AbstractController(cc) with I18nSupport{
   val productForm: Form[Product] = Form{
     mapping(
@@ -35,7 +33,6 @@ class Products @Inject()(val cc: ControllerComponents) extends AbstractControlle
     }
   )
   }
-
   def newProduct = Action { implicit request =>
     val form = if (request.flash.get("error").isDefined)
       productForm.bind(request.flash.data)
@@ -54,8 +51,4 @@ class Products @Inject()(val cc: ControllerComponents) extends AbstractControlle
       Ok(views.html.products.details(product))
     }.getOrElse(NotFound)
   }
-
-
-
-
 }

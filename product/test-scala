@@ -1,3 +1,9 @@
 echo "home is =================>" $HOME
 echo "the wrking dir is : "
 pwd
+cd product
+
+echo "==== starting compile ===="
+sbt compile
+echo "=====  starting test ====="
+sbt test
