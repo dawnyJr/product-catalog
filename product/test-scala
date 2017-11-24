@@ -1,0 +1,3 @@
+echo "home is =================>" $HOME
+echo "the wrking dir is : "
+pwd
