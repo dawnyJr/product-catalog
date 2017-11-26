@@ -1,6 +1,6 @@
 package controllers
 
-import models.Product
+import models.{Product, ProductService}
 import javax.inject._
 
 import play.api.i18n.{I18nSupport, Messages}
@@ -11,9 +11,10 @@ import play.api.data._
 import play.api.data.Forms._
 
 @Singleton
-class Products @Inject()(val cc: ControllerComponents) extends AbstractController(cc) with I18nSupport{
+class Products @Inject()(val cc: ControllerComponents, val productService: ProductService) extends AbstractController(cc) with I18nSupport{
   val productForm: Form[Product] = Form{
     mapping(
+      "id"-> longNumber,
       "ean" -> longNumber.verifying("validation.ean.duplicate",Product.findByEan(_).isEmpty),
       "name" -> nonEmptyText,
       "description" -> nonEmptyText
@@ -42,7 +43,8 @@ class Products @Inject()(val cc: ControllerComponents) extends AbstractControlle
   }
 
   def list = Action { implicit request => // Controller action
-    val products = Product.findAll // get a product list from model
+    //val products = Product.findAll // get a product list from model
+    val products = productService.getAll
     Ok(views.html.products.list(products)) // Render view template
   }
 

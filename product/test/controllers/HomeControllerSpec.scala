@@ -19,8 +19,8 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
       val controller = new HomeController(stubControllerComponents())
       val home = controller.index().apply(FakeRequest(GET, "/"))
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
+      status(home) mustBe SEE_OTHER
+      //contentType(home) mustBe Some("text/html")
       //contentAsString(home) must include ("Welcome to Play")
     }
 
@@ -28,8 +28,8 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
       val controller = inject[HomeController]
       val home = controller.index().apply(FakeRequest(GET, "/"))
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
+      status(home) mustBe SEE_OTHER
+      //contentType(home) mustBe Some("text/html")
       //contentAsString(home) must include ("Welcome to Play")
     }
 
@@ -37,8 +37,8 @@ class HomeControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
       val request = FakeRequest(GET, "/")
       val home = route(app, request).get
 
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
+      status(home) mustBe SEE_OTHER
+      //contentType(home) mustBe Some("text/html")
       //contentAsString(home) must include ("Welcome to Play")
     }
   }

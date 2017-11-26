@@ -9,6 +9,7 @@
                 @messages("products.details", Messages("products.new"))
             </legend>
             @CSRF.formField
+            @helper.inputText(productForm("id"))
             @helper.inputText(productForm("ean"))
             @helper.inputText(productForm("name"))
             @helper.textarea(productForm("description"))
