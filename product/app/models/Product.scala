@@ -4,7 +4,9 @@ import javax.inject.{Inject, Singleton}
 
 import anorm.SqlParser.get
 import anorm.{~, _}
-import play.api.db.DBApi
+import play.api.db._
+
+import scala.concurrent.Future
 
 
 case class Product(id: Long, ean: Long, name: String, description: String) // Model class
@@ -27,9 +29,9 @@ object Product { // the Data Access Object : DAO
 
 }
 @Singleton
-class ProductService @Inject()(dbapi: DBApi){
-  val DB = dbapi.database("default")
+class ProductService @Inject()(DB: Database)(implicit ec: DatabaseExecutionContext){
   //using anorm to fetch the database
+  private val generatedParse: RowParser[Product] = Macro.namedParser[Product]
   private val productParser = {
     get[Long]("products.id") ~
       get[Long]("products.ean") ~
@@ -40,9 +42,15 @@ class ProductService @Inject()(dbapi: DBApi){
     }
   }
 
-  def sql : SqlQuery = SQL("select * from products order by name asc")
-  def getAll: List[Product] = DB.withConnection{
-    implicit connection =>
-      sql.as(productParser.*)
+  def findByEan(ean: Long) : Future[Product] = Future{
+    DB.withConnection{implicit connection =>
+      SQL("select * from products where ean = {ean}").on('ean -> ean).as(productParser.single)
+    }
   }
+  def findAll: Future[List[Product]] = Future{
+    DB.withConnection{
+      implicit connection =>
+        SQL("select * from products order by name asc").as(generatedParse *)
+    }
+  }(ec)
 }

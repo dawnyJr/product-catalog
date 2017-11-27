@@ -6,12 +6,16 @@ import javax.inject._
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.mvc._
 
+import scala.concurrent.{ExecutionContext, Future}
+
 //import for managing Forms
 import play.api.data._
 import play.api.data.Forms._
 
 @Singleton
-class Products @Inject()(val cc: ControllerComponents, val productService: ProductService) extends AbstractController(cc) with I18nSupport{
+class Products @Inject()(val cc: ControllerComponents,
+                         val productService: ProductService)(implicit ec: ExecutionContext)
+                        extends AbstractController(cc) with I18nSupport{
   val productForm: Form[Product] = Form{
     mapping(
       "id"-> longNumber,
@@ -42,15 +46,16 @@ class Products @Inject()(val cc: ControllerComponents, val productService: Produ
     Ok(views.html.products.editProduct(form))
   }
 
-  def list = Action { implicit request => // Controller action
+  def list = Action.async { implicit request => // Controller action
     //val products = Product.findAll // get a product list from model
-    val products = productService.getAll
-    Ok(views.html.products.list(products)) // Render view template
+    productService.findAll.map { products =>
+      Ok(views.html.products.list(products))
+    }
   }
 
-  def show(ean: Long) = Action { implicit request =>
-    Product.findByEan(ean).map { product =>
+  def show(ean: Long) = Action.async { implicit request =>
+    productService.findByEan(ean).map {product =>
       Ok(views.html.products.details(product))
-    }.getOrElse(NotFound)
+    }
   }
 }
