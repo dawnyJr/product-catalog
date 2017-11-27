@@ -7,3 +7,5 @@ env:
     - SCRIPT=test-scala
 script:
   - product/$SCRIPT
+after_success:
+  - coveralls
